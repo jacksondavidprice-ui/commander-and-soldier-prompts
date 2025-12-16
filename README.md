@@ -9,11 +9,14 @@
 
 ## Quick Start
 
-### 1. Start Legate
-Open a Cursor window, paste the Legate prompt.
+### 1. Approve everything mode
+Put Cursor in YOLO(deprecated) / approve everything mode.
 
-### 2. Start Legionaries
-For each legionary you want, open a new Cursor window and paste the Legionary prompt with their number:
+### 2. Start Legate
+Create a new agent in Cursor, and paste the Legate prompt.
+
+### 3. Start Legionaries
+For each legionary you want, create a new agent and paste the Legionary prompt with their number:
 
 > "You are legionary-1"
 
@@ -27,7 +30,7 @@ The legionary will:
 - Register itself
 - Start watching for tasks
 
-### 3. Use the System
+### 4. Use the System
 Talk to Legate. It assigns tasks. Legionaries execute automatically.
 
 ---
@@ -76,7 +79,7 @@ Ask Legate:
 
 ## Adding More Legionaries
 
-Just start a new Cursor window with the legionary prompt:
+Just create a new agent with the legionary prompt:
 > "You are legionary-4"
 
 It will bootstrap itself and register.
@@ -86,9 +89,11 @@ It will bootstrap itself and register.
 ## Troubleshooting
 
 **Legionary not responding:**
+- Click "continue" if there were network or timeout errors (MOST COMMON) (this happens often when you switch networks or close the computer)
 - Check its status.json
 - Check if file watcher is running
-- Restart the legionary window
+- Tell the legionary to continue
+- Approve any potentially frozen commands (I strongly recommend putting cursor in YOLO(deprecated) / approve everything mode.)
 
 **Legionary confused about identity:**
 - Tell it: "You are legionary-X" 
