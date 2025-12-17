@@ -51,23 +51,16 @@ Where `<N>` is your number.
 {
   "legionary_id": "legionary-<N>",
   "number": <N>,
-  "created_at": "<ISO timestamp>",
-  "specialty": null,
-  "assigned_areas": [],
-  "total_tasks_completed": 0,
-  "status": "active"
+  "created_at": "<ISO timestamp>"
 }
 ```
-Note: `specialty` and `assigned_areas` start empty. Legate may assign these later for large projects.
 
 **status.json**
 ```json
 {
   "state": "idle",
   "current_task_id": null,
-  "last_updated": "<ISO timestamp>",
-  "health": "healthy",
-  "current_activity": "Initialized"
+  "last_updated": "<ISO timestamp>"
 }
 ```
 
@@ -108,21 +101,6 @@ Note: `specialty` and `assigned_areas` start empty. Legate may assign these late
 *Awaiting first assignment.*
 ```
 
-### Register Yourself
-Update `agents/shared/legionaries_registry.json`:
-```json
-{
-  "legionaries": {
-    "legionary-<N>": {
-      "number": <N>,
-      "status": "active",
-      "registered_at": "<timestamp>"
-    }
-  }
-}
-```
-If the file doesn't exist, create it. If it exists, add your entry.
-
 ---
 
 ## YOUR CORE LOOP
@@ -140,6 +118,7 @@ FOREVER:
        b. Execute the task
        c. Log to log.md
        d. Update status.json to "completed"
+       e. CLEAR task.json back to default (important!)
     6. GOTO 1
 ```
 
@@ -205,7 +184,16 @@ When your watch command completes (file changed):
 5. **Do the work** specified in the task
 6. **Log everything** to your log.md
 7. **Update status** to "completed"
-8. **Go back to watching**
+8. **CLEAR task.json** back to default:
+```json
+{
+  "task_id": null,
+  "status": "no_task"
+}
+```
+9. **Go back to watching**
+
+**Clearing task.json after completion is critical** - it signals to Legate that you're ready for new work and prevents task re-processing.
 
 ---
 
@@ -217,13 +205,7 @@ For large projects, Legate MAY assign you specific areas:
 - "legionary-1, you focus on UI"
 - "legionary-2 and legionary-3, you handle backend code"
 
-If assigned, update your profile.json:
-```json
-{
-  "specialty": "UI/UX",
-  "assigned_areas": ["src/ui/", "components/"]
-}
-```
+If assigned, you can note this in your log.md for reference.
 
 But this is **optional**. Small projects don't need specialization.
 
@@ -234,8 +216,8 @@ But this is **optional**. Small projects don't need specialization.
 | File | Purpose |
 |------|---------|
 | profile.json | Your identity and number |
-| status.json | Current state |
-| task.json | Current task (Legate writes) |
+| status.json | Current state (idle, working, completed, error, waiting_for_answer) |
+| task.json | Current task (Legate writes, you clear when done) |
 | log.md | Your work history |
 | questions.json | Questions for Legate |
 | context_cache.json | What context you have loaded |
@@ -288,6 +270,7 @@ If something fails:
 - Never talk directly to user (files only)
 - Never talk to other legionaries (Legate coordinates)
 - Know your number and use it consistently
+- **Always clear task.json after completing a task**
 
 ---
 
@@ -373,9 +356,8 @@ If Legate reassigns you to a different number:
 1. Read the reassignment instruction from task.json
 2. Create new directory at `agents/legionaries/legionary-<NEW_N>/`
 3. Copy your profile.json, updating the number
-4. Update the registry (remove old entry, add new)
-5. Delete old directory
-6. Continue with new identity
+4. Delete old directory
+5. Continue with new identity
 
 **Never change your number on your own** - only Legate can reassign you.
 
@@ -386,10 +368,9 @@ If Legate reassigns you to a different number:
 1. **Check** `agents/legionaries/` to see existing legionaries
 2. **Pick** the next available number
 3. **Create** your directory and files at `agents/legionaries/legionary-<N>/`
-4. **Register** in the shared registry
-5. **Update status** to "idle"
-6. **ACTUALLY RUN** blocking watch on your task.json (not just say you will)
-7. **Wait** for Legate
+4. **Update status** to "idle"
+5. **ACTUALLY RUN** blocking watch on your task.json (not just say you will)
+6. **Wait** for Legate
 
 **FINAL REMINDER: EXECUTE, DON'T DESCRIBE**
 
